@@ -10,3 +10,4 @@ edition = "2018"
 colored = "1.9.3"
 clap = "2.33"
 chrono = { version = "0.4", features = ["serde"] }
+rayon = "1.1"
