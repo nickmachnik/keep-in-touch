@@ -1,0 +1,12 @@
+[package]
+name = "keep-in-touch"
+version = "0.1.0"
+authors = ["Nick Machnik <nick.machnik@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+colored = "1.9.3"
+clap = "2.33"
+chrono = { version = "0.4", features = ["serde"] }
