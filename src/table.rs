@@ -2,30 +2,33 @@
 //! data written, stored and read by the application.
 
 use chrono::{Date, Duration, Utc};
+use hashbrown::HashMap;
 use rayon::prelude::*;
 
 #[derive(Debug)]
 struct Table {
-    entries: Vec<Entry>,
+    entries: HashMap<String, Entry>,
 }
 
 impl Table {
     fn new() -> Self {
         Table {
-            entries: Vec::new(),
+            entries: HashMap::new(),
         }
     }
 
     fn add_entry(&mut self, entry: Entry) {
-        self.entries.push(entry);
+        if self.entries.contains_key(&entry.name) {
+            error!("A friend with name {:?} already exists. Please choose a different name or modify the existing entry", entry.name);
+        } else {
+            self.entries.insert(entry.name.clone(), entry);
+        }
     }
 
     fn update_entries_par(&mut self) {
         self.entries
             .par_iter_mut()
-            .for_each(|e| e.update_remaining_time());
-        self.entries
-            .sort_by(|a, b| b.remaining_time.cmp(&a.remaining_time));
+            .for_each(|(k, v)| v.update_remaining_time());
     }
 }
 
