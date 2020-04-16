@@ -11,3 +11,6 @@ colored = "1.9.3"
 clap = "2.33"
 chrono = { version = "0.4", features = ["serde"] }
 rayon = "1.1"
+hashbrown = { version = "0.7", features = ["serde", "rayon"] }
+log = "0.4"
+env_logger = "0.7"
