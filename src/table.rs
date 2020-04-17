@@ -1,11 +1,12 @@
 //! The `table` mod contains structs that hold the actual
 //! data written, stored and read by the application.
 
-use chrono::{Date, Duration, Utc};
+use chrono::{DateTime, Utc};
 use hashbrown::HashMap;
 use rayon::prelude::*;
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 struct Table {
     entries: HashMap<String, Entry>,
 }
@@ -32,33 +33,29 @@ impl Table {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 struct Entry {
     pub name: String,
     // The chat interval in days
-    pub interval: Duration,
-    last_contact: Date<Utc>,
+    pub interval: usize,
+    last_contact: DateTime<Utc>,
     remaining_time: i64,
 }
 
 impl Entry {
-    fn new(name: String, interval: Duration, last_contact: Date<Utc>) -> Self {
+    fn new(name: String, interval: usize, last_contact: DateTime<Utc>) -> Self {
         Entry {
             name,
             interval,
             last_contact,
-            remaining_time: (interval.num_days()
-                - Utc::now()
-                    .date()
-                    .signed_duration_since(last_contact)
-                    .num_days()),
+            remaining_time: (interval as i64
+                - Utc::now().signed_duration_since(last_contact).num_days()),
         }
     }
 
     fn update_remaining_time(&mut self) {
-        self.remaining_time = self.interval.num_days()
+        self.remaining_time = self.interval as i64
             - Utc::now()
-                .date()
                 .signed_duration_since(self.last_contact)
                 .num_days();
     }
@@ -70,7 +67,7 @@ mod tests {
 
     #[test]
     fn test_remaining_time() {
-        let mut e1 = Entry::new("Martin".to_string(), Duration::days(30), Utc::now().date());
+        let mut e1 = Entry::new("Martin".to_string(), 30, Utc::now());
         assert_eq!(30, e1.remaining_time);
         e1.update_remaining_time();
         assert_eq!(30, e1.remaining_time);
