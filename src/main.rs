@@ -6,6 +6,7 @@ extern crate hashbrown;
 #[macro_use]
 extern crate log;
 extern crate rayon;
+extern crate serde;
 
 use chrono::Local;
 use colored::Colorize;
