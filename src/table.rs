@@ -13,12 +13,19 @@ use std::path::Path;
 #[derive(Debug, Serialize, Deserialize)]
 struct Table {
     entries: HashMap<String, Entry>,
+    // thresholds for highlighting
+    t1: i64,
+    t2: i64,
+    t3: i64,
 }
 
 impl Table {
     fn new() -> Self {
         Table {
             entries: HashMap::new(),
+            t1: 0,
+            t2: 3,
+            t3: 10,
         }
     }
 
@@ -50,8 +57,15 @@ impl Table {
     fn print_by_remaining_time(&self) {
         let mut res = self.entries.values().collect::<Vec<&Entry>>();
         res.sort_by(|a, b| a.remaining_time.cmp(&b.remaining_time));
+        println!(
+            "{0: <10}  {1: <10}  {2: <10}  {3: <10}",
+            "Name".white().on_black().bold(),
+            "Remaing".white().on_black().bold(),
+            "Last".white().on_black().bold(),
+            "Interval".white().on_black().bold()
+        );
         for e in res {
-            e.print()
+            e.print(self.t1, self.t2, self.t3)
         }
     }
 }
@@ -83,17 +97,19 @@ impl Entry {
                 .num_days();
     }
 
-    fn print(&self) {
+    fn print(&self, t1: i64, t2: i64, t3: i64) {
         let mut line = format!(
-            "{:?}\t{:?}\t{:?}\t{:?}",
+            "{0: <10}  {1: <10}  {2: <10}  {3: <10}",
             self.name,
-            self.interval,
+            self.remaining_time,
             self.last_contact.date(),
-            self.remaining_time
+            self.interval,
         );
-        if self.remaining_time < 3 {
+        if self.remaining_time < t1 {
+            line = line.red().on_black().blink().to_string();
+        } else if self.remaining_time < t2 {
             line = line.red().on_black().to_string();
-        } else if self.remaining_time > 10 {
+        } else if self.remaining_time > t3 {
             line = line.green().on_black().to_string();
         } else {
             line = line.magenta().on_black().to_string();
