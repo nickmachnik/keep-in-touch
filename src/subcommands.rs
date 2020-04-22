@@ -1,10 +1,24 @@
 use clap::ArgMatches;
-use std::ffi::OsStr;
-use std::io::{BufRead, BufReader};
+// use std::ffi::OsStr;
+// use std::fs::create_dir_all;
+use std::fs::read_to_string;
+// use std::io::{BufRead, BufReader};
 use std::path::Path;
 
+use crate::table::Table;
+
 pub fn add(args: ArgMatches) {
-    unimplemented!()
+    let c = args.subcommand_matches("add").unwrap();
+    let name = c.value_of("name").unwrap();
+    let interval = c.value_of("interval").unwrap();
+    let last_chat = c.value_of("name").unwrap();
+    let mut data = if let Ok(json_file_str) = read_to_string(Path::new("table.json")) {
+        Table::from_json(json_file_str)
+    } else {
+        Table::new()
+    };
+
+    // if data.entries.contains_key
     // error!("Attempted to index compressed file: {:?}", inpath);
     // info!("All done.");
 }

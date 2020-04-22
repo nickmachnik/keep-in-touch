@@ -6,12 +6,12 @@ use colored::Colorize;
 use hashbrown::HashMap;
 use rayon::prelude::*;
 use serde::{Deserialize, Serialize};
-use std::fs::{read_to_string, File};
+use std::fs::File;
 use std::io::BufWriter;
 use std::path::Path;
 
 #[derive(Debug, Serialize, Deserialize)]
-struct Table {
+pub struct Table {
     entries: HashMap<String, Entry>,
     // thresholds for highlighting
     t1: i64,
@@ -20,7 +20,7 @@ struct Table {
 }
 
 impl Table {
-    fn new() -> Self {
+    pub fn new() -> Self {
         Table {
             entries: HashMap::new(),
             t1: 0,
@@ -29,8 +29,7 @@ impl Table {
         }
     }
 
-    pub fn from_json(path: &Path) -> Self {
-        let json_file_str = read_to_string(path).expect("Infile not found.");
+    pub fn from_json(json_file_str: String) -> Self {
         serde_json::from_str(&json_file_str).expect("Error while reading infile.")
     }
 
@@ -58,7 +57,7 @@ impl Table {
         let mut res = self.entries.values().collect::<Vec<&Entry>>();
         res.sort_by(|a, b| a.remaining_time.cmp(&b.remaining_time));
         println!(
-            "{0: <10}  {1: <10}  {2: <10}  {3: <10}",
+            "{0: <15}  {1: <15}  {2: <15}  {3: <15}",
             "Name".white().on_black().bold(),
             "Remaing".white().on_black().bold(),
             "Last".white().on_black().bold(),
@@ -99,7 +98,7 @@ impl Entry {
 
     fn print(&self, t1: i64, t2: i64, t3: i64) {
         let mut line = format!(
-            "{0: <10}  {1: <10}  {2: <10}  {3: <10}",
+            "{0: <15}  {1: <15}  {2: <15}  {3: <15}",
             self.name,
             self.remaining_time,
             self.last_contact.date(),
