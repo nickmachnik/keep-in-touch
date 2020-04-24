@@ -34,13 +34,32 @@ fn main() {
         .filter(None, LevelFilter::Info)
         .init();
 
-    let add = SubCommand::with_name("add").about("").arg(
-        Arg::with_name("input")
-            .required(true)
-            .takes_value(true)
-            .index(1)
-            .help("Path to input fasta file (uncompressed)"),
-    );
+    let add = SubCommand::with_name("add")
+        .about("Add a person to your list.")
+        .arg(
+            Arg::with_name("name")
+                .required(true)
+                .takes_value(true)
+                .index(1)
+                .help("Name of the person you want to add."),
+        )
+        .arg(
+            Arg::with_name("interval")
+                .required(true)
+                .takes_value(true)
+                .index(2)
+                .help("How regularly do you want to talk to the person (in days)?"),
+        )
+        .arg(
+            Arg::with_name("last chat")
+                .required(true)
+                .takes_value(true)
+                .index(3)
+                .help(
+                    "The date of the last chat with your friend. Either `now` or \
+                in a year-month-day format, e.g. `2000-5-4`.",
+                ),
+        );
 
     let args = App::new("kit")
         .version("0.1.0")

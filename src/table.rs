@@ -12,7 +12,7 @@ use std::path::Path;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Table {
-    entries: HashMap<String, Entry>,
+    pub entries: HashMap<String, Entry>,
     // thresholds for highlighting
     t1: i64,
     t2: i64,
@@ -39,7 +39,7 @@ impl Table {
         serde_json::to_writer(&mut file, self).expect("Error writing to outfile.");
     }
 
-    fn add_entry(&mut self, entry: Entry) {
+    pub fn add_entry(&mut self, entry: Entry) {
         if self.entries.contains_key(&entry.name) {
             error!("A friend with name {:?} already exists. Please choose a different name or modify the existing entry", entry.name);
         } else {
@@ -70,7 +70,7 @@ impl Table {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-struct Entry {
+pub struct Entry {
     pub name: String,
     // The chat interval in days
     pub interval: usize,
@@ -79,7 +79,7 @@ struct Entry {
 }
 
 impl Entry {
-    fn new(name: String, interval: usize, last_contact: DateTime<Utc>) -> Self {
+    pub fn new(name: String, interval: usize, last_contact: DateTime<Utc>) -> Self {
         Entry {
             name,
             interval,
