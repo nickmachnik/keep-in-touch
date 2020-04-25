@@ -16,6 +16,7 @@ use log::LevelFilter;
 
 use std::io::Write;
 
+mod parse;
 mod subcommands;
 mod table;
 
