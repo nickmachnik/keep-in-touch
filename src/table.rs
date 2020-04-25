@@ -6,9 +6,31 @@ use colored::Colorize;
 use hashbrown::HashMap;
 use rayon::prelude::*;
 use serde::{Deserialize, Serialize};
+use std::error;
+use std::fmt;
 use std::fs::File;
 use std::io::BufWriter;
 use std::path::Path;
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ExistingEntry;
+
+impl fmt::Display for ExistingEntry {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "Name already used")
+    }
+}
+
+impl error::Error for ExistingEntry {
+    fn description(&self) -> &str {
+        "Name already used"
+    }
+
+    fn cause(&self) -> Option<&(dyn error::Error)> {
+        // Generic error, underlying cause isn't tracked.
+        None
+    }
+}
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Table {
@@ -39,11 +61,12 @@ impl Table {
         serde_json::to_writer(&mut file, self).expect("Error writing to outfile.");
     }
 
-    pub fn add_entry(&mut self, entry: Entry) {
+    pub fn add_entry(&mut self, entry: Entry) -> Result<(), ExistingEntry> {
         if self.entries.contains_key(&entry.name) {
-            error!("A friend with name {:?} already exists. Please choose a different name or modify the existing entry", entry.name);
+            Err(ExistingEntry)
         } else {
             self.entries.insert(entry.name.clone(), entry);
+            Ok(())
         }
     }
 
