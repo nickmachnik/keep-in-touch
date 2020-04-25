@@ -29,12 +29,15 @@ pub fn parse_date(arg: &str) -> Result<DateTime<Utc>, Box<dyn error::Error>> {
     match arg {
         "now" => Ok(Utc::now()),
         _ => {
-            let split = arg.split('-').map(|e| e.parse::<u32>()).collect::<Vec<_>>();
+            let mut split = Vec::new();
+            for e in arg.split('-') {
+                split.push(e.parse::<u32>()?);
+            }
             if arg.len() < 3 {
                 Err(ShortVec.into())
             } else {
                 Ok(Utc
-                    .ymd(split[0]?.try_into().unwrap(), split[1]?, split[2]?)
+                    .ymd(split[0].try_into().unwrap(), split[1], split[2])
                     .and_hms(12, 12, 12))
             }
         }
