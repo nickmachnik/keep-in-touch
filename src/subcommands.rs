@@ -4,8 +4,10 @@ use std::path::Path;
 
 use crate::parse::parse_date;
 use crate::table::{Entry, Table};
+use crate::TABLE_LOC;
 
 pub fn add(args: ArgMatches) {
+    let table_path = Path::new(TABLE_LOC);
     let c = args.subcommand_matches("add").unwrap();
     let name = c.value_of("name").unwrap();
     let interval = c.value_of("interval").unwrap().parse().unwrap();
@@ -13,7 +15,7 @@ pub fn add(args: ArgMatches) {
     if let Err(e) = &last_chat {
         error!("Parsing the date string failed: {:?}", e);
     }
-    let mut data = if let Ok(json_file_str) = read_to_string(Path::new("table.json")) {
+    let mut data = if let Ok(json_file_str) = read_to_string(table_path) {
         Table::from_json(json_file_str)
     } else {
         Table::new()
@@ -29,6 +31,7 @@ pub fn add(args: ArgMatches) {
     } else {
         data.add_entry(Entry::new(name.to_string(), interval, last_chat.unwrap()));
     }
+    data.to_json(table_path);
     info!("Added {:?}.", name);
 }
 
