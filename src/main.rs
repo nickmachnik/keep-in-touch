@@ -69,4 +69,21 @@ fn main() {
         .subcommand(add)
         .setting(AppSettings::ArgRequiredElseHelp)
         .get_matches();
+
+    match args.subcommand_name() {
+        Some("add") => {
+            subcommands::add(args);
+        }
+        Some("remove") => {
+            subcommands::remove(args);
+        }
+        Some("modify") => {
+            subcommands::modify(args);
+        }
+        Some("view") => {
+            subcommands::view(args);
+        }
+        Some(other) => unimplemented!("{}", other),
+        None => panic!("what is supposed to happen here"),
+    }
 }
