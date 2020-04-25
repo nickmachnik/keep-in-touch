@@ -33,7 +33,7 @@ pub fn parse_date(arg: &str) -> Result<DateTime<Utc>, Box<dyn error::Error>> {
             for e in arg.split('-') {
                 split.push(e.parse::<u32>()?);
             }
-            if arg.len() < 3 {
+            if split.len() < 3 {
                 Err(ShortVec.into())
             } else {
                 Ok(Utc
@@ -41,5 +41,33 @@ pub fn parse_date(arg: &str) -> Result<DateTime<Utc>, Box<dyn error::Error>> {
                     .and_hms(12, 12, 12))
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_parse_date_now() {
+        assert_eq!(Utc::now().date(), parse_date("now").unwrap().date());
+    }
+
+    #[test]
+    fn test_parse_date_fail_short_date() {
+        assert!(parse_date("2002-05").is_err());
+    }
+
+    #[test]
+    fn test_parse_date_fail_wrong_format() {
+        assert!(parse_date("baba-05-02").is_err());
+    }
+
+    #[test]
+    fn test_parse_date_custom_date() {
+        assert_eq!(
+            Utc.ymd(2020, 5, 2).and_hms(12, 12, 12),
+            parse_date("2020-05-02").unwrap()
+        );
     }
 }
