@@ -25,7 +25,7 @@ impl error::Error for ShortVec {
     }
 }
 
-fn parse_date(arg: &str) -> Result<DateTime<Utc>, Box<dyn error::Error>> {
+pub fn parse_date(arg: &str) -> Result<DateTime<Utc>, Box<dyn error::Error>> {
     match arg {
         "now" => Ok(Utc::now()),
         _ => {
