@@ -5,6 +5,7 @@ extern crate env_logger;
 extern crate hashbrown;
 #[macro_use]
 extern crate log;
+extern crate exitcode;
 extern crate rayon;
 extern crate serde;
 

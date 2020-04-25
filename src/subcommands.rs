@@ -14,6 +14,7 @@ pub fn add(args: ArgMatches) {
     let last_chat = parse_date(c.value_of("last chat").unwrap());
     if let Err(e) = &last_chat {
         error!("Parsing the date string failed: {:?}", e);
+        std::process::exit(exitcode::USAGE);
     }
     let mut data = if let Ok(json_file_str) = read_to_string(table_path) {
         Table::from_json(json_file_str)
@@ -28,6 +29,7 @@ pub fn add(args: ArgMatches) {
             existing entry.",
             name
         );
+        std::process::exit(exitcode::CANTCREAT);
     } else {
         data.add_entry(Entry::new(name.to_string(), interval, last_chat.unwrap()));
     }
