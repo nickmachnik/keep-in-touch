@@ -22,7 +22,10 @@ pub fn add(args: ArgMatches) {
         Table::new()
     };
 
-    if data.entries.contains_key(name) {
+    if data
+        .add_entry(Entry::new(name.to_string(), interval, last_chat.unwrap()))
+        .is_err()
+    {
         error!(
             "Name {:?} is already used.  \
             Please choose a different name or modify the \
@@ -30,9 +33,8 @@ pub fn add(args: ArgMatches) {
             name
         );
         std::process::exit(exitcode::CANTCREAT);
-    } else {
-        data.add_entry(Entry::new(name.to_string(), interval, last_chat.unwrap()));
     }
+
     data.to_json(table_path);
     info!("Added {:?}.", name);
 }
