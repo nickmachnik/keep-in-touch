@@ -12,12 +12,18 @@ pub fn add(args: ArgMatches) {
     let name = c.value_of("name").unwrap();
     let interval = c.value_of("interval").unwrap().parse();
     if let Err(e) = interval {
-        error!("Parsing the interval failed: {:?}", e);
+        error!(
+            "Parsing the interval field failed: {:?}. Please enter an integer.",
+            e
+        );
         std::process::exit(exitcode::USAGE);
     }
     let last_chat = parse_date(c.value_of("last chat").unwrap());
     if let Err(e) = &last_chat {
-        error!("Parsing the date string failed: {:?}", e);
+        error!(
+            "Parsing the date string failed: {:?}. Required format: YEAR-MONTH-DAY",
+            e
+        );
         std::process::exit(exitcode::USAGE);
     }
     let mut data = if let Ok(json_file_str) = read_to_string(table_path) {

@@ -28,9 +28,9 @@ fn add_wrong_date_format() -> Result<(), Box<dyn std::error::Error>> {
 fn add_wrong_interval_format() -> Result<(), Box<dyn std::error::Error>> {
     let mut cmd = Command::cargo_bin("kit")?;
     cmd.arg("add").arg("Martin").arg("bubu").arg("now");
-    cmd.assert()
-        .failure()
-        .stderr(predicate::str::contains("Parsing the interval failed"));
+    cmd.assert().failure().stderr(predicate::str::contains(
+        "Parsing the interval field failed",
+    ));
 
     Ok(())
 }
