@@ -10,7 +10,11 @@ pub fn add(args: ArgMatches) {
     let table_path = Path::new(TABLE_LOC);
     let c = args.subcommand_matches("add").unwrap();
     let name = c.value_of("name").unwrap();
-    let interval = c.value_of("interval").unwrap().parse().unwrap();
+    let interval = c.value_of("interval").unwrap().parse();
+    if let Err(e) = interval {
+        error!("Parsing the interval failed: {:?}", e);
+        std::process::exit(exitcode::USAGE);
+    }
     let last_chat = parse_date(c.value_of("last chat").unwrap());
     if let Err(e) = &last_chat {
         error!("Parsing the date string failed: {:?}", e);
@@ -23,7 +27,11 @@ pub fn add(args: ArgMatches) {
     };
 
     if data
-        .add_entry(Entry::new(name.to_string(), interval, last_chat.unwrap()))
+        .add_entry(Entry::new(
+            name.to_string(),
+            interval.unwrap(),
+            last_chat.unwrap(),
+        ))
         .is_err()
     {
         error!(
