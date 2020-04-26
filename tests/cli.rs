@@ -34,3 +34,14 @@ fn add_wrong_interval_format() -> Result<(), Box<dyn std::error::Error>> {
 
     Ok(())
 }
+
+#[test]
+fn remove_non_existing() -> Result<(), Box<dyn std::error::Error>> {
+    let mut cmd = Command::cargo_bin("kit")?;
+    cmd.arg("remove").arg("Daniel");
+    cmd.assert()
+        .failure()
+        .stderr(predicate::str::contains("is not in the list"));
+
+    Ok(())
+}
