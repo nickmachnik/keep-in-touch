@@ -75,12 +75,15 @@ fn main() {
                 .help("Name of the person you want to remove."),
         );
 
+    let view = SubCommand::with_name("view").about("View the list.");
+
     let args = App::new("kit")
         .version("0.1.0")
         .author("Nick Noel Machnik <nick.machnik@gmail.com>")
         .about("Command line organizer that helps you remember to call your friends.")
         .subcommand(add)
         .subcommand(remove)
+        .subcommand(view)
         .setting(AppSettings::ArgRequiredElseHelp)
         .get_matches();
 
