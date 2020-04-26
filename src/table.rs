@@ -131,7 +131,7 @@ pub struct Entry {
     pub name: String,
     // The chat interval in days
     pub interval: usize,
-    last_contact: DateTime<Utc>,
+    pub last_contact: DateTime<Utc>,
     remaining_time: i64,
 }
 
@@ -146,7 +146,7 @@ impl Entry {
         }
     }
 
-    fn update_remaining_time(&mut self) {
+    pub fn update_remaining_time(&mut self) {
         self.remaining_time = self.interval as i64
             - Utc::now()
                 .signed_duration_since(self.last_contact)
