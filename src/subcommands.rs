@@ -1,4 +1,4 @@
-use chrono::{DateTime, TimeZone, Utc};
+use chrono::{DateTime, Utc};
 use clap::ArgMatches;
 use std::fs::read_to_string;
 use std::path::Path;
@@ -39,12 +39,7 @@ pub fn add(args: ArgMatches) {
     let name = c.value_of("name").unwrap();
     let interval = get_interval(c.value_of("interval").unwrap());
     let last_chat = get_date(c.value_of("last chat").unwrap());
-    let mut data = if let Ok(json_file_str) = read_to_string(table_path) {
-        Table::from_json(json_file_str)
-    } else {
-        Table::new()
-    };
-
+    let mut data = Table::from_json(table_path).unwrap_or_else(|_| Table::new());
     if data
         .add_entry(Entry::new(name.to_string(), interval, last_chat))
         .is_err()
@@ -57,13 +52,21 @@ pub fn add(args: ArgMatches) {
         );
         std::process::exit(exitcode::CANTCREAT);
     }
-
     data.to_json(table_path);
     info!("Added {:?}.", name);
 }
 
 pub fn remove(args: ArgMatches) {
-    unimplemented!()
+    let table_path = Path::new(TABLE_LOC);
+    let c = args.subcommand_matches("remove").unwrap();
+    let name = c.value_of("name").unwrap();
+    let mut data = Table::from_json(table_path).unwrap_or_else(|_| Table::new());
+    if data.remove_entry(name.to_string()).is_err() {
+        error!("Name {:?} is not in the list.", name);
+        std::process::exit(exitcode::USAGE);
+    }
+    data.to_json(table_path);
+    info!("Removed {:?}.", name);
 }
 
 pub fn modify(args: ArgMatches) {
