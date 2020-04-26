@@ -121,5 +121,7 @@ pub fn view(_args: ArgMatches) {
         error!("List file not found. Please add entries before viewing.");
         std::process::exit(exitcode::USAGE);
     }
-    data.unwrap().print_by_remaining_time();
+    let mut data = data.unwrap();
+    data.update_entries_par();
+    data.print_by_remaining_time();
 }
