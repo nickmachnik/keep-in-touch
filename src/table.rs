@@ -110,7 +110,7 @@ impl Table {
             .for_each(|(_k, v)| v.update_remaining_time());
     }
 
-    fn print_by_remaining_time(&self) {
+    pub fn print_by_remaining_time(&self) {
         let mut res = self.entries.values().collect::<Vec<&Entry>>();
         res.sort_by(|a, b| a.remaining_time.cmp(&b.remaining_time));
         println!(
