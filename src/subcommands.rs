@@ -1,11 +1,15 @@
 use chrono::{DateTime, Utc};
 use clap::ArgMatches;
 
-use std::path::Path;
+use std::path::PathBuf;
 
 use crate::parse::parse_date;
 use crate::table::{Entry, Table};
 use crate::TABLE_LOC;
+
+fn get_bin_path() -> PathBuf {
+    std::env::current_exe().unwrap().join(TABLE_LOC)
+}
 
 fn get_interval(raw: &str) -> usize {
     match raw.parse() {
@@ -34,12 +38,12 @@ fn get_date(raw: &str) -> DateTime<Utc> {
 }
 
 pub fn add(args: ArgMatches) {
-    let table_path = Path::new(TABLE_LOC);
+    let table_path = get_bin_path();
     let c = args.subcommand_matches("add").unwrap();
     let name = c.value_of("name").unwrap();
     let interval = get_interval(c.value_of("interval").unwrap());
     let last_chat = get_date(c.value_of("last chat").unwrap());
-    let mut data = Table::from_json(table_path).unwrap_or_else(|_| Table::new());
+    let mut data = Table::from_json(&table_path).unwrap_or_else(|_| Table::new());
     if data
         .add_entry(Entry::new(name.to_string(), interval, last_chat))
         .is_err()
@@ -52,13 +56,13 @@ pub fn add(args: ArgMatches) {
         );
         std::process::exit(exitcode::CANTCREAT);
     }
-    data.to_json(table_path);
+    data.to_json(&table_path);
     info!("Added {:?}.", name);
 }
 
 pub fn remove(args: ArgMatches) {
-    let table_path = Path::new(TABLE_LOC);
-    let data = Table::from_json(table_path);
+    let table_path = get_bin_path();
+    let data = Table::from_json(&table_path);
     if data.is_err() {
         error!("List file not found. Please add entries first.");
         std::process::exit(exitcode::USAGE);
@@ -70,13 +74,13 @@ pub fn remove(args: ArgMatches) {
         error!("Name {:?} is not in the list.", name);
         std::process::exit(exitcode::USAGE);
     }
-    data.to_json(table_path);
+    data.to_json(&table_path);
     info!("Removed {:?}.", name);
 }
 
 pub fn modify(args: ArgMatches) {
-    let table_path = Path::new(TABLE_LOC);
-    let data = Table::from_json(table_path);
+    let table_path = get_bin_path();
+    let data = Table::from_json(&table_path);
     if data.is_err() {
         error!("List file not found. Please add entries first.");
         std::process::exit(exitcode::USAGE);
@@ -110,13 +114,13 @@ pub fn modify(args: ArgMatches) {
             std::process::exit(exitcode::USAGE);
         }
     }
-    data.to_json(table_path);
+    data.to_json(&table_path);
     info!("Modified {:?}.", name);
 }
 
 pub fn view(_args: ArgMatches) {
-    let table_path = Path::new(TABLE_LOC);
-    let data = Table::from_json(table_path);
+    let table_path = get_bin_path();
+    let data = Table::from_json(&table_path);
     if data.is_err() {
         error!("List file not found. Please add entries before viewing.");
         std::process::exit(exitcode::USAGE);
