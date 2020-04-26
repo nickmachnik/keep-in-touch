@@ -73,6 +73,12 @@ pub fn modify(args: ArgMatches) {
     unimplemented!()
 }
 
-pub fn view(args: ArgMatches) {
-    unimplemented!()
+pub fn view(_args: ArgMatches) {
+    let table_path = Path::new(TABLE_LOC);
+    let data = Table::from_json(table_path);
+    if data.is_err() {
+        error!("List file not found. Please add entries before viewing.");
+        std::process::exit(exitcode::USAGE);
+    }
+    data.unwrap().print_by_remaining_time();
 }
