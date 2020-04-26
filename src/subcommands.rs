@@ -1,6 +1,6 @@
 use chrono::{DateTime, Utc};
 use clap::ArgMatches;
-use std::fs::read_to_string;
+
 use std::path::Path;
 
 use crate::parse::parse_date;
@@ -58,13 +58,13 @@ pub fn add(args: ArgMatches) {
 
 pub fn remove(args: ArgMatches) {
     let table_path = Path::new(TABLE_LOC);
-    let c = args.subcommand_matches("remove").unwrap();
-    let name = c.value_of("name").unwrap();
     let data = Table::from_json(table_path);
     if data.is_err() {
-        error!("List file not found. Please add entries.");
+        error!("List file not found. Please add entries first.");
         std::process::exit(exitcode::USAGE);
     }
+    let c = args.subcommand_matches("remove").unwrap();
+    let name = c.value_of("name").unwrap();
     let mut data = data.unwrap();
     if data.remove_entry(name.to_string()).is_err() {
         error!("Name {:?} is not in the list.", name);
@@ -76,8 +76,42 @@ pub fn remove(args: ArgMatches) {
 
 pub fn modify(args: ArgMatches) {
     let table_path = Path::new(TABLE_LOC);
+    let data = Table::from_json(table_path);
+    if data.is_err() {
+        error!("List file not found. Please add entries first.");
+        std::process::exit(exitcode::USAGE);
+    }
+    let data = &mut data.unwrap();
     let c = args.subcommand_matches("modify").unwrap();
     let name = c.value_of("name").unwrap();
+    let entry = data.entries.get_mut(name);
+    if entry.is_none() {
+        error!("Name {:?} is not in the list.", name);
+        std::process::exit(exitcode::USAGE);
+    }
+    let entry = entry.unwrap();
+    let raw_new_val = c.value_of("new value").unwrap();
+    match c.value_of("field").unwrap() {
+        "name" => {
+            let new_entry = Entry::new(raw_new_val.to_string(), entry.interval, entry.last_contact);
+            data.add_entry(new_entry).unwrap();
+            data.remove_entry(name.to_string()).unwrap();
+        }
+        "interval" => {
+            entry.interval = get_interval(raw_new_val);
+            entry.update_remaining_time();
+        }
+        "last" => {
+            entry.last_contact = get_date(raw_new_val);
+            entry.update_remaining_time();
+        }
+        _ => {
+            error!("Invalid field id. Use of 'name', 'interval', 'last'.");
+            std::process::exit(exitcode::USAGE);
+        }
+    }
+    data.to_json(table_path);
+    info!("Modified {:?}.", name);
 }
 
 pub fn view(_args: ArgMatches) {
