@@ -104,7 +104,7 @@ impl Table {
         }
     }
 
-    fn update_entries_par(&mut self) {
+    pub fn update_entries_par(&mut self) {
         self.entries
             .par_iter_mut()
             .for_each(|(_k, v)| v.update_remaining_time());
