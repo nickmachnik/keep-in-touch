@@ -13,17 +13,41 @@ use std::io::BufWriter;
 use std::path::Path;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct ExistingEntry;
+pub struct ExistingEntry {
+    name: String,
+}
 
 impl fmt::Display for ExistingEntry {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Name already used")
+        write!(f, "Name {} already used", self.name)
     }
 }
 
 impl error::Error for ExistingEntry {
     fn description(&self) -> &str {
         "Name already used"
+    }
+
+    fn cause(&self) -> Option<&(dyn error::Error)> {
+        // Generic error, underlying cause isn't tracked.
+        None
+    }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct MissingEntry {
+    name: String,
+}
+
+impl fmt::Display for MissingEntry {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "Name {} not in list", self.name)
+    }
+}
+
+impl error::Error for MissingEntry {
+    fn description(&self) -> &str {
+        "Name not in list"
     }
 
     fn cause(&self) -> Option<&(dyn error::Error)> {
@@ -65,9 +89,17 @@ impl Table {
 
     pub fn add_entry(&mut self, entry: Entry) -> Result<(), ExistingEntry> {
         if self.entries.contains_key(&entry.name) {
-            Err(ExistingEntry)
+            Err(ExistingEntry { name: entry.name })
         } else {
             self.entries.insert(entry.name.clone(), entry);
+            Ok(())
+        }
+    }
+
+    pub fn remove_entry(&mut self, name: String) -> Result<(), MissingEntry> {
+        if self.entries.remove(&name).is_none() {
+            Err(MissingEntry { name })
+        } else {
             Ok(())
         }
     }
