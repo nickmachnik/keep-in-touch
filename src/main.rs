@@ -65,11 +65,22 @@ fn main() {
                 ),
         );
 
+    let remove = SubCommand::with_name("remove")
+        .about("Remove a person from your list.")
+        .arg(
+            Arg::with_name("name")
+                .required(true)
+                .takes_value(true)
+                .index(1)
+                .help("Name of the person you want to remove."),
+        );
+
     let args = App::new("kit")
         .version("0.1.0")
         .author("Nick Noel Machnik <nick.machnik@gmail.com>")
         .about("Command line organizer that helps you remember to call your friends.")
         .subcommand(add)
+        .subcommand(remove)
         .setting(AppSettings::ArgRequiredElseHelp)
         .get_matches();
 
