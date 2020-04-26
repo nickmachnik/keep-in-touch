@@ -8,7 +8,7 @@ use rayon::prelude::*;
 use serde::{Deserialize, Serialize};
 use std::error;
 use std::fmt;
-use std::fs::File;
+use std::fs::{read_to_string, File};
 use std::io::BufWriter;
 use std::path::Path;
 
@@ -51,8 +51,10 @@ impl Table {
         }
     }
 
-    pub fn from_json(json_file_str: String) -> Self {
-        serde_json::from_str(&json_file_str).expect("Error while reading infile.")
+    pub fn from_json(path: &Path) -> Result<Self, Box<dyn error::Error>> {
+        let json_file_str = read_to_string(path)?;
+        let data = serde_json::from_str(&json_file_str)?;
+        Ok(data)
     }
 
     pub fn to_json(&self, outpath: &Path) {
