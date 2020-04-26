@@ -60,7 +60,12 @@ pub fn remove(args: ArgMatches) {
     let table_path = Path::new(TABLE_LOC);
     let c = args.subcommand_matches("remove").unwrap();
     let name = c.value_of("name").unwrap();
-    let mut data = Table::from_json(table_path).unwrap_or_else(|_| Table::new());
+    let data = Table::from_json(table_path);
+    if data.is_err() {
+        error!("List file not found. Please add entries.");
+        std::process::exit(exitcode::USAGE);
+    }
+    let mut data = data.unwrap();
     if data.remove_entry(name.to_string()).is_err() {
         error!("Name {:?} is not in the list.", name);
         std::process::exit(exitcode::USAGE);
@@ -70,7 +75,9 @@ pub fn remove(args: ArgMatches) {
 }
 
 pub fn modify(args: ArgMatches) {
-    unimplemented!()
+    let table_path = Path::new(TABLE_LOC);
+    let c = args.subcommand_matches("modify").unwrap();
+    let name = c.value_of("name").unwrap();
 }
 
 pub fn view(_args: ArgMatches) {
