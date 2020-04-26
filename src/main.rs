@@ -75,6 +75,33 @@ fn main() {
                 .help("Name of the person you want to remove."),
         );
 
+    let modify = SubCommand::with_name("modify")
+        .about("Modify an entry.")
+        .arg(
+            Arg::with_name("name")
+                .required(true)
+                .takes_value(true)
+                .index(1)
+                .help("Name of the person you who's entry you want to modify."),
+        )
+        .arg(
+            Arg::with_name("field")
+                .required(true)
+                .takes_value(true)
+                .index(2)
+                .help(
+                    "The entry field you want to modify. \
+                    One of 'name', 'interval', 'last'.",
+                ),
+        )
+        .arg(
+            Arg::with_name("new value")
+                .required(true)
+                .takes_value(true)
+                .index(3)
+                .help("The value you want to replace the existing value with."),
+        );
+
     let view = SubCommand::with_name("view").about("View the list.");
 
     let args = App::new("kit")
@@ -84,6 +111,7 @@ fn main() {
         .subcommand(add)
         .subcommand(remove)
         .subcommand(view)
+        .subcommand(modify)
         .setting(AppSettings::ArgRequiredElseHelp)
         .get_matches();
 
