@@ -198,7 +198,7 @@ mod tests {
             Utc.ymd(2020, 3, 20).and_hms(12, 12, 12),
         );
         let mut table = Table::new();
-        table.add_entry(e2);
+        table.add_entry(e2).unwrap();
         table.update_entries_par();
         assert_eq!(
             remaining_daniel,
@@ -220,9 +220,9 @@ mod tests {
             Utc.ymd(2020, 3, 20).and_hms(12, 12, 12),
         );
         let mut table = Table::new();
-        table.add_entry(e2);
-        table.add_entry(e1);
-        table.add_entry(e3);
+        table.add_entry(e2).unwrap();
+        table.add_entry(e1).unwrap();
+        table.add_entry(e3).unwrap();
         table.print_by_remaining_time();
     }
 }
