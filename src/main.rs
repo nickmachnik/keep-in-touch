@@ -21,7 +21,7 @@ mod parse;
 mod subcommands;
 mod table;
 
-const TABLE_LOC: &str = "./table.json";
+const TABLE_LOC: &str = "table.json";
 
 fn main() {
     // log time stamp
