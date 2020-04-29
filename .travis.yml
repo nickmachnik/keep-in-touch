@@ -19,7 +19,7 @@ matrix:
   # don't need
   include:
     - os: linux
-      dist: trusty
+      dist: bionic
 
     # Android
     # - env: TARGET=aarch64-linux-android DISABLE_TESTS=1
