@@ -7,8 +7,10 @@ use crate::parse::parse_date;
 use crate::table::{Entry, Table};
 use crate::TABLE_LOC;
 
-fn get_bin_path() -> PathBuf {
-    std::env::current_exe().unwrap().join(TABLE_LOC)
+fn get_table_path() -> PathBuf {
+    let mut outpath = std::env::current_exe().unwrap();
+    outpath.set_file_name(TABLE_LOC);
+    outpath
 }
 
 fn get_interval(raw: &str) -> usize {
@@ -38,7 +40,7 @@ fn get_date(raw: &str) -> DateTime<Utc> {
 }
 
 pub fn add(args: ArgMatches) {
-    let table_path = get_bin_path();
+    let table_path = get_table_path();
     let c = args.subcommand_matches("add").unwrap();
     let name = c.value_of("name").unwrap();
     let interval = get_interval(c.value_of("interval").unwrap());
@@ -61,7 +63,7 @@ pub fn add(args: ArgMatches) {
 }
 
 pub fn remove(args: ArgMatches) {
-    let table_path = get_bin_path();
+    let table_path = get_table_path();
     let data = Table::from_json(&table_path);
     if data.is_err() {
         error!("List file not found. Please add entries first.");
@@ -79,7 +81,7 @@ pub fn remove(args: ArgMatches) {
 }
 
 pub fn modify(args: ArgMatches) {
-    let table_path = get_bin_path();
+    let table_path = get_table_path();
     let data = Table::from_json(&table_path);
     if data.is_err() {
         error!("List file not found. Please add entries first.");
@@ -119,7 +121,7 @@ pub fn modify(args: ArgMatches) {
 }
 
 pub fn view(_args: ArgMatches) {
-    let table_path = get_bin_path();
+    let table_path = get_table_path();
     let data = Table::from_json(&table_path);
     if data.is_err() {
         error!("List file not found. Please add entries before viewing.");
