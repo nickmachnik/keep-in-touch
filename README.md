@@ -1,7 +1,6 @@
 # keep-in-touch (kit)
 
 ![Rust](https://github.com/nickmachnik/keep-in-touch/workflows/Rust/badge.svg)
-![TravisCI](https://travis-ci.org/nickmachnik/keep-in-touch.svg?branch=master)
 
 `kit` is a very simple and fast command line tool that helps you keeping in touch with your friends and family. It maintains a table of friends, contact intervals and last dates of contact, which you can view in the command line. The viewing features automatic sorting of the table by the next contacts, as well as colour coding by urgency.
 
