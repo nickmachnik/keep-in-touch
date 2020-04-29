@@ -4,6 +4,27 @@
 
 `kit` is a very simple and fast command line tool that helps you keeping in touch with your friends and family. It maintains a table of friends, contact intervals and last dates of contact, which you can view in the command line. The viewing features automatic sorting of the table by the next contacts, as well as colour coding by urgency.
 
+## Installing
+
+### Linux
+
+Download the latest [release](https://github.com/nickmachnik/keep-in-touch/releases/latest) to a directory in which you would like to keep the binary.
+For example:
+
+```
+cd
+mkdir ./.keep_in_touch
+cd .keep_in_touch
+wget https://github.com/nickmachnik/keep-in-touch/releases/download/v0.1.0/keep-in-touch-v0.1.0-x86_64-unknown-linux-gnu.tar.gz
+tar -xf keep-in-touch-v0.1.0-x86_64-unknown-linux-gnu.tar.gz
+```
+
+Add that directory to your path. On Ubuntu you could add this line to your `.bashrc`:
+
+```
+export PATH="~/.keep_in_touch:$PATH"
+```
+
 ## Usage
 
 ```
@@ -22,34 +43,7 @@ Double licensed under
 
 This project is largely inspired by an idea (and habit) of Martin Frassek's.
 
-<!-- ## Getting Started
-
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
-
-### Prerequisites
-
-What things you need to install the software and how to install them
-
-```
-Give examples
-```
-
-### Installing
-
-A step by step series of examples that tell you how to get a development env running
-
-Say what the step will be
-
-```
-Give the example
-```
-
-And repeat
-
-```
-until finished
-```
-
+<!-- 
 End with an example of getting some data out of the system or using it for a little demo
 
 ## Running the tests
