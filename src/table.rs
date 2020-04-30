@@ -116,7 +116,7 @@ impl Table {
         println!(
             "{0: <15}  {1: <15}  {2: <15}  {3: <15}",
             "Name".white().on_black().bold(),
-            "Remaing".white().on_black().bold(),
+            "Remaining".white().on_black().bold(),
             "Last".white().on_black().bold(),
             "Interval".white().on_black().bold()
         );
