@@ -25,6 +25,12 @@ Add that directory to your path. On Ubuntu you could add this line to your `.bas
 export PATH="~/.keep_in_touch:$PATH"
 ```
 
+If you would like to enable bash autocompletion for `kit`, source the autocompletion script on shell start by adding this to your `.bashrc`:
+
+```
+source ~/.keep_in_touch/kit-completion.sh
+```
+
 ## Usage
 
 ```
