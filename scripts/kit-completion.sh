@@ -21,8 +21,8 @@ _main() {
 }
 
 _names() {
-    local cur="${COMP_WORDS[COMP_CWORD]}"
-    COMPREPLY=($(compgen -W "KIT_SAVED_NAMES" -- "$cur"))  
+    local namepos="${COMP_WORDS[COMP_CWORD]}"
+    COMPREPLY=($(compgen -W "KIT_SAVED_NAMES" -- "$namepos"))
 }
 
 _add() {
