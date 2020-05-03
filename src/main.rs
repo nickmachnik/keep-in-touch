@@ -1,20 +1,7 @@
-extern crate chrono;
-extern crate clap;
-extern crate colored;
-extern crate env_logger;
-extern crate hashbrown;
-#[macro_use]
-extern crate log;
-extern crate exitcode;
-extern crate rayon;
-extern crate serde;
-
 use chrono::Local;
 use clap::{App, AppSettings, Arg, SubCommand};
-
 use env_logger::Builder;
 use log::LevelFilter;
-
 use std::io::Write;
 
 mod helpers;
