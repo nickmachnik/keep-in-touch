@@ -5,7 +5,7 @@ use std::process::Command;
 #[test]
 fn whole_workflow() -> Result<(), Box<dyn std::error::Error>> {
     let mut cmd = Command::cargo_bin("kit")?;
-    cmd.arg("add").arg("X").arg("30").arg("now");
+    cmd.arg("add").arg("X").arg("30").arg("now").arg("-n");
     cmd.assert().stderr(predicate::str::contains("Added \"X\""));
     let mut cmd = Command::cargo_bin("kit")?;
     cmd.arg("modify").arg("X").arg("interval").arg("10");
