@@ -22,6 +22,7 @@ main() {
 
     # TODO Update this to package the right artifacts
     cp target/$TARGET/release/kit $stage/
+    cp scripts/kit-completion.sh $stage/
 
     cd $stage
     tar czf $src/$CRATE_NAME-$TRAVIS_TAG-$TARGET.tar.gz *
