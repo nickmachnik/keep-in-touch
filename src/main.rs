@@ -17,11 +17,13 @@ use log::LevelFilter;
 
 use std::io::Write;
 
+mod helpers;
 mod parse;
 mod subcommands;
 mod table;
 
 const TABLE_LOC: &str = "table.json";
+const COMPLETION_LOC: &str = "kit-completion.sh";
 
 fn main() {
     // log time stamp
