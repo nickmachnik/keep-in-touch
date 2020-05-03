@@ -51,16 +51,24 @@ pub fn update_autocomplete_names(table: &Table) -> Result<(), io::Error> {
     let mut compl_path = std::env::current_exe().unwrap();
     compl_path.set_file_name(COMPLETION_LOC);
     let data = read_to_string(&compl_path)?;
-    let re = Regex::new(r#"-W "(?s)(.*)" --"#).unwrap();
+    let re = Regex::new(r#"-W "(?s)(.*)" -- "$namepos""#).unwrap();
     let names = table
         .entries
         .keys()
         .map(|s| s.to_string())
         .collect::<Vec<_>>()
         .join(" ");
-    let new_data = re.replace_all(&data, format!(r#"-W "{}" --"#, &names).as_str());
+    let new_data = re.replace_all(&data, format!(r#"-W "{}" -- "$namepos""#, &names).as_str());
     let mut dst = File::create(&compl_path)?;
     dst.write_all(new_data.as_bytes())?;
     info!("Updated names for autocompletion.");
     Ok(())
 }
+
+// pub fn generate_autocomplete_script() -> Result<(), io::Error> {
+//     let mut compl_path = std::env::current_exe().unwrap();
+//     compl_path.set_file_name(COMPLETION_LOC);
+//     let mut dst = File::create(&compl_path)?;
+//     dst.write_all(r#"COMPREPLY=($(compgen -W "KIT_SAVED_NAMES" -- "$namepos"))"#.as_bytes())?;
+//     Ok(())
+// }
