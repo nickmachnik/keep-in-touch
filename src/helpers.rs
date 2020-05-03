@@ -1,11 +1,18 @@
 //! Small helper functions that perform often used operations.
 
-use crate::parse::parse_date;
-use crate::table::Table;
-use crate::TABLE_LOC;
 use chrono::prelude::DateTime;
 use chrono::prelude::Utc;
+use log::{error, info};
+use regex::Regex;
+use std::fs::{read_to_string, File};
+use std::io;
+use std::io::Write;
 use std::path::PathBuf;
+
+use crate::parse::parse_date;
+use crate::table::Table;
+use crate::COMPLETION_LOC;
+use crate::TABLE_LOC;
 
 pub fn get_table_path() -> PathBuf {
     let mut outpath = std::env::current_exe().unwrap();
@@ -39,7 +46,21 @@ pub fn get_date(raw: &str) -> DateTime<Utc> {
     }
 }
 
-/// This updates the names in the kit-complete.sh script
-pub fn update_autocomplete_names(_table: &Table) {
-    unimplemented!()
+/// This updates the names in the kit-complete.sh script.
+pub fn update_autocomplete_names(table: &Table) -> Result<(), io::Error> {
+    let mut compl_path = std::env::current_exe().unwrap();
+    compl_path.set_file_name(COMPLETION_LOC);
+    let data = read_to_string(&compl_path)?;
+    let re = Regex::new(r#"-W "(?s)(.*)" --"#).unwrap();
+    let names = table
+        .entries
+        .keys()
+        .map(|s| s.to_string())
+        .collect::<Vec<_>>()
+        .join(" ");
+    let new_data = re.replace_all(&data, format!(r#"-W "{}" --"#, &names).as_str());
+    let mut dst = File::create(&compl_path)?;
+    dst.write_all(new_data.as_bytes())?;
+    info!("Updated names for autocompletion.");
+    Ok(())
 }
