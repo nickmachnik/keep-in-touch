@@ -9,6 +9,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Fix 'Remaing' typo in `view`
 
+### Added
+
+- Autocompletion for subcommands and listed names
+
 ## [0.1.0]
 
 - Initial release
