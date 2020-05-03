@@ -27,6 +27,15 @@ fn main() {
         .filter(None, LevelFilter::Info)
         .init();
 
+    let no_update = Arg::with_name("no-autocomplete-update")
+        .long("no-update")
+        .short("n")
+        .global(true)
+        .help(
+            "Disable update of the bash autocomplete script which \
+         is done by default whenver a name is added or changed.",
+        );
+
     let add = SubCommand::with_name("add")
         .about("Add a person to your list.")
         .arg(
@@ -97,6 +106,7 @@ fn main() {
         .version("0.1.0")
         .author("Nick Noel Machnik <nick.machnik@gmail.com>")
         .about("Command line organizer that helps you remember to call your friends.")
+        .arg(no_update)
         .subcommand(add)
         .subcommand(remove)
         .subcommand(view)
