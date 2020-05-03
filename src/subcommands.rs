@@ -1,4 +1,5 @@
 use clap::ArgMatches;
+use log::{error, info};
 
 use crate::helpers::{get_date, get_interval, get_table_path, update_autocomplete_names};
 use crate::table::{Entry, Table};
@@ -22,7 +23,7 @@ pub fn add(args: ArgMatches) {
         );
         std::process::exit(exitcode::CANTCREAT);
     }
-    update_autocomplete_names(&data);
+    update_autocomplete_names(&data).expect("Autocomplete update failed!");
     data.to_json(&table_path);
     info!("Added {:?}.", name);
 }
@@ -67,7 +68,7 @@ pub fn modify(args: ArgMatches) {
             let new_entry = Entry::new(raw_new_val.to_string(), entry.interval, entry.last_contact);
             data.add_entry(new_entry).unwrap();
             data.remove_entry(name.to_string()).unwrap();
-            update_autocomplete_names(&data);
+            update_autocomplete_names(&data).expect("Autocomplete update failed!");
         }
         "interval" => {
             entry.interval = get_interval(raw_new_val);
