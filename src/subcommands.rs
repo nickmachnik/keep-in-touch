@@ -1,43 +1,7 @@
-use chrono::{DateTime, Utc};
 use clap::ArgMatches;
 
-use std::path::PathBuf;
-
-use crate::parse::parse_date;
+use crate::helpers::{get_date, get_interval, get_table_path, update_autocomplete_names};
 use crate::table::{Entry, Table};
-use crate::TABLE_LOC;
-
-fn get_table_path() -> PathBuf {
-    let mut outpath = std::env::current_exe().unwrap();
-    outpath.set_file_name(TABLE_LOC);
-    outpath
-}
-
-fn get_interval(raw: &str) -> usize {
-    match raw.parse() {
-        Ok(num) => num,
-        Err(e) => {
-            error!(
-                "Parsing the interval field failed: {:?}. Please enter an integer.",
-                e
-            );
-            std::process::exit(exitcode::USAGE);
-        }
-    }
-}
-
-fn get_date(raw: &str) -> DateTime<Utc> {
-    match parse_date(raw) {
-        Ok(date) => date,
-        Err(e) => {
-            error!(
-                "Parsing the date string failed: {:?}. Required format: YEAR-MONTH-DAY",
-                e
-            );
-            std::process::exit(exitcode::USAGE);
-        }
-    }
-}
 
 pub fn add(args: ArgMatches) {
     let table_path = get_table_path();
@@ -58,6 +22,7 @@ pub fn add(args: ArgMatches) {
         );
         std::process::exit(exitcode::CANTCREAT);
     }
+    update_autocomplete_names(&data);
     data.to_json(&table_path);
     info!("Added {:?}.", name);
 }
@@ -102,6 +67,7 @@ pub fn modify(args: ArgMatches) {
             let new_entry = Entry::new(raw_new_val.to_string(), entry.interval, entry.last_contact);
             data.add_entry(new_entry).unwrap();
             data.remove_entry(name.to_string()).unwrap();
+            update_autocomplete_names(&data);
         }
         "interval" => {
             entry.interval = get_interval(raw_new_val);
