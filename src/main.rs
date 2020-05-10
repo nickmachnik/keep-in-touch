@@ -113,7 +113,7 @@ fn main() {
     let view = SubCommand::with_name("view").about("View the list.");
 
     let args = App::new("kit")
-        .version("0.1.0")
+        .version("0.2.0")
         .author("Nick Noel Machnik <nick.machnik@gmail.com>")
         .about("Command line organizer that helps you remember to call your friends.")
         .arg(no_update)
