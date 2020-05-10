@@ -4,6 +4,28 @@ use log::{error, info};
 use crate::helpers::{get_date, get_interval, get_table_path, update_autocomplete_names};
 use crate::table::{Entry, Table};
 
+pub fn just_talked_to(args: ArgMatches) {
+    let table_path = get_table_path();
+    let data = Table::from_json(&table_path);
+    if data.is_err() {
+        error!("List file not found. Please add entries first.");
+        std::process::exit(exitcode::USAGE);
+    }
+    let data = &mut data.unwrap();
+    let c = args.subcommand_matches("just-talked-to").unwrap();
+    let name = c.value_of("name").unwrap();
+    let entry = data.entries.get_mut(name);
+    if entry.is_none() {
+        error!("Name {:?} is not in the list.", name);
+        std::process::exit(exitcode::USAGE);
+    }
+    let entry = entry.unwrap();
+    entry.last_contact = get_date("now");
+    entry.update_remaining_time();
+    data.to_json(&table_path);
+    info!("Modified {:?}.", name);
+}
+
 pub fn add(args: ArgMatches) {
     let table_path = get_table_path();
     let c = args.subcommand_matches("add").unwrap();

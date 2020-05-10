@@ -5,6 +5,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+### Added
+
+- Quick update that sets the last chat date of a person to the current data: `kit just-talked-to` <name>
+
 ## [0.1.1]
 
 ### Fixed

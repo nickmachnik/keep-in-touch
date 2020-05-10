@@ -36,6 +36,16 @@ fn main() {
          is done by default whenver a name is added or changed.",
         );
 
+    let justtalkedto = SubCommand::with_name("just-talked-to")
+        .about("Set the `last` date of a person to `now`.")
+        .arg(
+            Arg::with_name("name")
+                .required(true)
+                .takes_value(true)
+                .index(1)
+                .help("Name of the person you just talked to."),
+        );
+
     let add = SubCommand::with_name("add")
         .about("Add a person to your list.")
         .arg(
@@ -111,6 +121,7 @@ fn main() {
         .subcommand(remove)
         .subcommand(view)
         .subcommand(modify)
+        .subcommand(justtalkedto)
         .setting(AppSettings::ArgRequiredElseHelp)
         .get_matches();
 
@@ -126,6 +137,9 @@ fn main() {
         }
         Some("view") => {
             subcommands::view(args);
+        }
+        Some("just-talked-to") => {
+            subcommands::just_talked_to(args);
         }
         Some(other) => unimplemented!("{}", other),
         None => panic!("what is supposed to happen here"),
