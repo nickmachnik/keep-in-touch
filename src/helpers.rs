@@ -64,11 +64,3 @@ pub fn update_autocomplete_names(table: &Table) -> Result<(), io::Error> {
     info!("Updated names for autocompletion.");
     Ok(())
 }
-
-// pub fn generate_autocomplete_script() -> Result<(), io::Error> {
-//     let mut compl_path = std::env::current_exe().unwrap();
-//     compl_path.set_file_name(COMPLETION_LOC);
-//     let mut dst = File::create(&compl_path)?;
-//     dst.write_all(r#"COMPREPLY=($(compgen -W "KIT_SAVED_NAMES" -- "$namepos"))"#.as_bytes())?;
-//     Ok(())
-// }
