@@ -9,7 +9,7 @@ _main() {
   if [[ "$COMP_CWORD" -eq 1 ]]
   then
     local cur="${COMP_WORDS[COMP_CWORD]}"
-    COMPREPLY=($(compgen -W "add help modify remove view -h -V" "$cur"))
+    COMPREPLY=($(compgen -W "add help modify remove view just-talked-to -h -V" "$cur"))
     return
   fi
 
@@ -20,8 +20,18 @@ _main() {
   case "$cmd" in
     remove) _remove ;;
     modify) _modify ;;
+    just-talked-to) _just_talked_to ;;
     *)          ;;
   esac
+}
+
+_just_talked_to() {
+  # kit just-talked-to <name>
+  if [[ "$COMP_CWORD" -eq 2 ]]
+  then
+    _names
+    return
+  fi
 }
 
 _remove() {
