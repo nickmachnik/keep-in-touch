@@ -52,7 +52,7 @@ Double licensed under either of
 
 ## Acknowledgments
 
-This project is largely inspired by an idea (and habit) of Martin Frassek's.
+This project is largely inspired by an idea (and habit) of [Martin Frassek's](https://github.com/MFrassek).
 
 <!-- 
 End with an example of getting some data out of the system or using it for a little demo
