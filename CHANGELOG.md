@@ -5,6 +5,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+### Changed
+
+- Default coloring with 4 stages: Green, Magenta, Yellow, Red, no blinking.
+
 ## [0.2.0]
 
 ### Added

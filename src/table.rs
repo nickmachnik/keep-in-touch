@@ -162,9 +162,9 @@ impl Entry {
             self.interval,
         );
         if self.remaining_time < t1 {
-            line = line.red().on_black().blink().to_string();
-        } else if self.remaining_time < t2 {
             line = line.red().on_black().to_string();
+        } else if self.remaining_time < t2 {
+            line = line.yellow().on_black().to_string();
         } else if self.remaining_time > t3 {
             line = line.green().on_black().to_string();
         } else {
