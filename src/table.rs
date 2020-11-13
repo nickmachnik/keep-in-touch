@@ -126,6 +126,33 @@ impl Table {
     }
 }
 
+#[derive(Debug)]
+pub struct EntryVec(Vec<Entry>);
+
+impl core::ops::Deref for EntryVec {
+    type Target = Vec<Entry>;
+
+    fn deref(self: &'_ Self) -> &'_ Self::Target {
+        &self.0
+    }
+}
+
+impl core::ops::DerefMut for EntryVec {
+    fn deref_mut(self: &'_ mut Self) -> &'_ mut Self::Target {
+        &mut self.0
+    }
+}
+
+impl EntryVec {
+    pub fn sort_by_time_ascending(&mut self) {
+        self.sort_by(|a, b| a.remaining_time.cmp(&b.remaining_time));
+    }
+
+    pub fn sort_by_time_descending(&mut self) {
+        self.sort_by(|a, b| b.remaining_time.cmp(&a.remaining_time));
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Entry {
     pub name: String,
@@ -178,6 +205,48 @@ impl Entry {
 mod tests {
     use super::*;
     use chrono::TimeZone;
+
+    #[test]
+    fn test_entry_vec_sort_time_descending() {
+        let e1 = Entry::new("Martin".to_string(), 30, Utc::now());
+        let e2 = Entry::new(
+            "Daniel".to_string(),
+            30,
+            Utc.ymd(2020, 3, 20).and_hms(12, 12, 12),
+        );
+        let e3 = Entry::new(
+            "Baniel".to_string(),
+            30,
+            Utc.ymd(2020, 5, 20).and_hms(12, 12, 12),
+        );
+        let mut entries = EntryVec(vec![e2, e1, e3]);
+        entries.sort_by_time_descending();
+        assert_eq!(
+            entries.iter().map(|e| e.remaining_time).collect::<Vec<_>>()[0],
+            30
+        );
+    }
+
+    #[test]
+    fn test_entry_vec_sort_time_ascending() {
+        let e1 = Entry::new("Martin".to_string(), 30, Utc::now());
+        let e2 = Entry::new(
+            "Daniel".to_string(),
+            30,
+            Utc.ymd(2020, 3, 20).and_hms(12, 12, 12),
+        );
+        let e3 = Entry::new(
+            "Baniel".to_string(),
+            30,
+            Utc.ymd(2020, 5, 20).and_hms(12, 12, 12),
+        );
+        let mut entries = EntryVec(vec![e2, e1, e3]);
+        entries.sort_by_time_ascending();
+        assert_eq!(
+            entries.iter().map(|e| e.remaining_time).collect::<Vec<_>>()[2],
+            30
+        );
+    }
 
     #[test]
     fn test_remaining_time() {
