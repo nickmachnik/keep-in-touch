@@ -1,5 +1,5 @@
 use chrono::Local;
-use clap::{App, AppSettings, Arg, SubCommand};
+use clap::{crate_version, App, AppSettings, Arg, SubCommand};
 use env_logger::Builder;
 use log::LevelFilter;
 use std::io::Write;
@@ -113,7 +113,7 @@ fn main() {
     let view = SubCommand::with_name("view").about("View the list.");
 
     let args = App::new("kit")
-        .version("0.2.0")
+        .version(crate_version!())
         .author("Nick Noel Machnik <nick.machnik@gmail.com>")
         .about("Command line organizer that helps you remember to call your friends.")
         .arg(no_update)
