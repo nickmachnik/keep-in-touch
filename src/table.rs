@@ -103,6 +103,7 @@ impl error::Error for MissingEntry {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Table {
     pub entries: HashMap<String, Entry>,
+    #[serde(default)]
     pub suspended_entries: HashSet<String>,
     // thresholds for highlighting
     t1: i64,
