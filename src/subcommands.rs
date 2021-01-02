@@ -7,8 +7,8 @@ use crate::table::{Entry, Table};
 pub fn just_talked_to(args: ArgMatches) {
     let table_path = get_table_path();
     let data = Table::from_json(&table_path);
-    if data.is_err() {
-        error!("List file not found. Please add entries first.");
+    if let Err(e) = data {
+        eprintln!("Application error: {}", e);
         std::process::exit(exitcode::USAGE);
     }
     let data = &mut data.unwrap();
@@ -55,8 +55,8 @@ pub fn add(args: ArgMatches) {
 pub fn remove(args: ArgMatches) {
     let table_path = get_table_path();
     let data = Table::from_json(&table_path);
-    if data.is_err() {
-        error!("List file not found. Please add entries first.");
+    if let Err(e) = data {
+        eprintln!("Application error: {}", e);
         std::process::exit(exitcode::USAGE);
     }
     let c = args.subcommand_matches("remove").unwrap();
@@ -73,8 +73,8 @@ pub fn remove(args: ArgMatches) {
 pub fn modify(args: ArgMatches) {
     let table_path = get_table_path();
     let data = Table::from_json(&table_path);
-    if data.is_err() {
-        error!("List file not found. Please add entries first.");
+    if let Err(e) = data {
+        eprintln!("Application error: {}", e);
         std::process::exit(exitcode::USAGE);
     }
     let data = &mut data.unwrap();
@@ -117,8 +117,8 @@ pub fn modify(args: ArgMatches) {
 pub fn view(_args: ArgMatches) {
     let table_path = get_table_path();
     let data = Table::from_json(&table_path);
-    if data.is_err() {
-        error!("List file not found. Please add entries before viewing.");
+    if let Err(e) = data {
+        eprintln!("Application error: {}", e);
         std::process::exit(exitcode::USAGE);
     }
     let mut data = data.unwrap();
@@ -130,8 +130,8 @@ pub fn view(_args: ArgMatches) {
 pub fn view_active(_args: ArgMatches) {
     let table_path = get_table_path();
     let data = Table::from_json(&table_path);
-    if data.is_err() {
-        error!("List file not found. Please add entries before viewing.");
+    if let Err(e) = data {
+        eprintln!("Application error: {}", e);
         std::process::exit(exitcode::USAGE);
     }
     let mut data = data.unwrap();
@@ -143,8 +143,8 @@ pub fn view_active(_args: ArgMatches) {
 pub fn view_inactive(_args: ArgMatches) {
     let table_path = get_table_path();
     let data = Table::from_json(&table_path);
-    if data.is_err() {
-        error!("List file not found. Please add entries before viewing.");
+    if let Err(e) = data {
+        eprintln!("Application error: {}", e);
         std::process::exit(exitcode::USAGE);
     }
     let mut data = data.unwrap();
@@ -156,8 +156,8 @@ pub fn view_inactive(_args: ArgMatches) {
 pub fn resume(args: ArgMatches) {
     let table_path = get_table_path();
     let data = Table::from_json(&table_path);
-    if data.is_err() {
-        error!("List file not found. Please add entries first.");
+    if let Err(e) = data {
+        eprintln!("Application error: {}", e);
         std::process::exit(exitcode::USAGE);
     }
     let c = args.subcommand_matches("resume").unwrap();
@@ -173,8 +173,8 @@ pub fn resume(args: ArgMatches) {
 pub fn suspend(args: ArgMatches) {
     let table_path = get_table_path();
     let data = Table::from_json(&table_path);
-    if data.is_err() {
-        error!("List file not found. Please add entries first.");
+    if let Err(e) = data {
+        eprintln!("Application error: {}", e);
         std::process::exit(exitcode::USAGE);
     }
     let c = args.subcommand_matches("suspend").unwrap();
