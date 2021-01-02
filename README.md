@@ -40,7 +40,12 @@ kit -h
 
 ## Autocompletions
 
-`kit` supports bash autocompletions, including the names saved in your table of friends. These are updated everytime you add a name via `kit add` or modify one via `kit modify`. This changes the 'kit-completion.sh' that is by default stored in the same directory as the 'kit' binary exectuable. Before these changes come into action, that scripts needs to be sourced from within you shell with `source` (see [Installing](#Installing)).
+`kit` supports bash autocompletions, including the names saved in your table of friends.
+These are updated everytime you add a name via `kit add` or modify one via `kit modify`.
+If you would like to do an update without any modification of your table, you can also
+use `kit update-autocompletion`.
+This changes the 'kit-completion.sh' that is by default stored in the same directory as the 'kit' binary exectuable.
+Before these changes come into action, that scripts needs to be sourced from within you shell with `source` (see [Installing](#Installing)).
 
 ## License
 
