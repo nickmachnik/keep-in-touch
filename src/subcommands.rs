@@ -186,3 +186,16 @@ pub fn suspend(args: ArgMatches) {
     data.to_json(&table_path);
     info!("Suspended {:?}.", name);
 }
+
+pub fn update_autocompletion(_args: ArgMatches) {
+    let table_path = get_table_path();
+    let data = Table::from_json(&table_path);
+    if let Err(e) = data {
+        eprintln!("Application error: {}", e);
+        std::process::exit(exitcode::USAGE);
+    }
+    if let Err(e) = update_autocomplete_names(&data.unwrap()) {
+        eprintln!("Application error: {}", e);
+        std::process::exit(exitcode::USAGE);
+    }
+}

@@ -140,6 +140,9 @@ fn main() {
 
     let view_inactive = SubCommand::with_name("view-inactive").about("View suspended entries.");
 
+    let update_autocompletion = SubCommand::with_name("update-autocompletion")
+        .about("Update the entry names in the kit-completion.sh.");
+
     let args = App::new("kit")
         .version(crate_version!())
         .author("Nick Noel Machnik <nick.machnik@gmail.com>")
@@ -154,6 +157,7 @@ fn main() {
         .subcommand(view_inactive)
         .subcommand(suspend)
         .subcommand(resume)
+        .subcommand(update_autocompletion)
         .setting(AppSettings::ArgRequiredElseHelp)
         .get_matches();
 
@@ -184,6 +188,9 @@ fn main() {
         }
         Some("just-talked-to") => {
             subcommands::just_talked_to(args);
+        }
+        Some("update-autocompletion") => {
+            subcommands::update_autocompletion(args);
         }
         Some(other) => unimplemented!("{}", other),
         None => panic!("what is supposed to happen here"),

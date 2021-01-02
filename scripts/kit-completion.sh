@@ -9,7 +9,7 @@ _main() {
   if [[ "$COMP_CWORD" -eq 1 ]]
   then
     local cur="${COMP_WORDS[COMP_CWORD]}"
-    COMPREPLY=($(compgen -W "add help modify remove view just-talked-to view-active view-inactive suspend resume -h -V" "$cur"))
+    COMPREPLY=($(compgen -W "add help modify remove view just-talked-to view-active view-inactive suspend resume update-autocompletion -h -V" "$cur"))
     return
   fi
 
