@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.2.2]
+
+### Added
+
+- Entries can be suspended and resumed. Entries in the two categories can
+  be printed separately and have different highlighting when printed
+  together.
+
 ## [0.2.1]
 
 ### Changed
