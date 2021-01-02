@@ -13,6 +13,28 @@ use std::io::BufWriter;
 use std::path::Path;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct SuspendedEntry {
+    name: String,
+}
+
+impl fmt::Display for SuspendedEntry {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "Name {} is currently suspended.", self.name)
+    }
+}
+
+impl error::Error for SuspendedEntry {
+    fn description(&self) -> &str {
+        "Entry is suspended."
+    }
+
+    fn cause(&self) -> Option<&(dyn error::Error)> {
+        // Generic error, underlying cause isn't tracked.
+        None
+    }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct UnsuspendedEntry {
     name: String,
 }
@@ -128,12 +150,24 @@ impl Table {
         }
     }
 
-    pub fn suspend_entry(&mut self, name: String) -> Result<(), MissingEntry> {
+    pub fn resume_entry(&mut self, name: String) -> Result<(), Box<dyn error::Error>> {
         if !self.entries.contains_key(&name) {
-            Err(MissingEntry { name })
+            Err(Box::new(MissingEntry { name }))
         } else if !self.suspended_entries.contains(&name) {
-            Err()
+            Err(Box::new(UnsuspendedEntry { name }))
         } else {
+            self.suspended_entries.remove(&name);
+            Ok(())
+        }
+    }
+
+    pub fn suspend_entry(&mut self, name: String) -> Result<(), Box<dyn error::Error>> {
+        if !self.entries.contains_key(&name) {
+            Err(Box::new(MissingEntry { name }))
+        } else if self.suspended_entries.contains(&name) {
+            Err(Box::new(SuspendedEntry { name }))
+        } else {
+            self.suspended_entries.insert(name);
             Ok(())
         }
     }
