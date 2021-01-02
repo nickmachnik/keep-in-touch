@@ -178,9 +178,13 @@ impl Table {
             .for_each(|(_k, v)| v.update_remaining_time());
     }
 
-    pub fn print_by_remaining_time(&self) {
-        let mut res = self.entries.values().collect::<Vec<&Entry>>();
-        res.sort_by(|a, b| a.remaining_time.cmp(&b.remaining_time));
+    pub fn print_active_by_remaining_time(&self) {
+        let mut active = self
+            .entries
+            .values()
+            .filter(|e| !self.suspended_entries.contains(&e.name))
+            .collect::<Vec<&Entry>>();
+        active.sort_by(|a, b| a.remaining_time.cmp(&b.remaining_time));
         println!(
             "{0: <15}  {1: <15}  {2: <15}  {3: <15}",
             "Name".white().on_black().bold(),
@@ -188,7 +192,7 @@ impl Table {
             "Last".white().on_black().bold(),
             "Interval".white().on_black().bold()
         );
-        for e in res {
+        for e in active {
             e.print(self.t1, self.t2, self.t3)
         }
     }
