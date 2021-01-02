@@ -7,9 +7,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
-- Entries can be suspended and resumed. Entries in the two categories can
-  be printed separately and have different highlighting when printed
-  together.
+- `kit update-autocompletion` command for update of entry names in the
+   autocompletion script.
+- Entries can be suspended and resumed with `kit suspend` and `kit resume`.
 
 ## [0.2.1]
 
