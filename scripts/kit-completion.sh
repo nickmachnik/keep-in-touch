@@ -1,4 +1,4 @@
-#! usr/bin/bash
+#!/usr/bin/bash
 
 _names() {
     local namepos="${COMP_WORDS[COMP_CWORD]}"
@@ -9,7 +9,7 @@ _main() {
   if [[ "$COMP_CWORD" -eq 1 ]]
   then
     local cur="${COMP_WORDS[COMP_CWORD]}"
-    COMPREPLY=($(compgen -W "add help modify remove view just-talked-to -h -V" "$cur"))
+    COMPREPLY=($(compgen -W "add help modify remove view just-talked-to view-active view-inactive suspend resume -h -V" "$cur"))
     return
   fi
 
@@ -20,6 +20,8 @@ _main() {
   case "$cmd" in
     remove) _remove ;;
     modify) _modify ;;
+    suspend) _remove ;;
+    resume) _remove ;;
     just-talked-to) _just_talked_to ;;
     *)          ;;
   esac
