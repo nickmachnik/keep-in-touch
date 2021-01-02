@@ -73,6 +73,30 @@ fn main() {
                 ),
         );
 
+    let suspend = SubCommand::with_name("suspend")
+        .about(
+            "Suspend an entry. \
+            Inactivates colored highlighting and shows the entry at \
+            the bottom of the table when printed.",
+        )
+        .arg(
+            Arg::with_name("name")
+                .required(true)
+                .takes_value(true)
+                .index(1)
+                .help("Name of the person you want to suspend."),
+        );
+
+    let resume = SubCommand::with_name("resume")
+        .about("Reactivates a suspended entry.")
+        .arg(
+            Arg::with_name("name")
+                .required(true)
+                .takes_value(true)
+                .index(1)
+                .help("Name of the person you want to reactivate."),
+        );
+
     let remove = SubCommand::with_name("remove")
         .about("Remove a person from your list.")
         .arg(
@@ -112,6 +136,10 @@ fn main() {
 
     let view = SubCommand::with_name("view").about("View the list.");
 
+    let view_active = SubCommand::with_name("view-active").about("View active entries.");
+
+    let view_inactive = SubCommand::with_name("view-inactive").about("View suspended entries.");
+
     let args = App::new("kit")
         .version(crate_version!())
         .author("Nick Noel Machnik <nick.machnik@gmail.com>")
@@ -122,6 +150,10 @@ fn main() {
         .subcommand(view)
         .subcommand(modify)
         .subcommand(justtalkedto)
+        .subcommand(view_active)
+        .subcommand(view_inactive)
+        .subcommand(suspend)
+        .subcommand(resume)
         .setting(AppSettings::ArgRequiredElseHelp)
         .get_matches();
 
@@ -137,6 +169,18 @@ fn main() {
         }
         Some("view") => {
             subcommands::view(args);
+        }
+        Some("view-active") => {
+            subcommands::view_active(args);
+        }
+        Some("view-inactive") => {
+            subcommands::view_inactive(args);
+        }
+        Some("suspend") => {
+            subcommands::suspend(args);
+        }
+        Some("resume") => {
+            subcommands::resume(args);
         }
         Some("just-talked-to") => {
             subcommands::just_talked_to(args);

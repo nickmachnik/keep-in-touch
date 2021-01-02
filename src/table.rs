@@ -178,13 +178,7 @@ impl Table {
             .for_each(|(_k, v)| v.update_remaining_time());
     }
 
-    pub fn print_active_by_remaining_time(&self) {
-        let mut active = self
-            .entries
-            .values()
-            .filter(|e| !self.suspended_entries.contains(&e.name))
-            .collect::<Vec<&Entry>>();
-        active.sort_by(|a, b| a.remaining_time.cmp(&b.remaining_time));
+    pub fn print_header(&self) {
         println!(
             "{0: <15}  {1: <15}  {2: <15}  {3: <15}",
             "Name".white().on_black().bold(),
@@ -192,8 +186,35 @@ impl Table {
             "Last".white().on_black().bold(),
             "Interval".white().on_black().bold()
         );
+    }
+
+    pub fn print_all_by_remaining_time(&self) {
+        self.print_active_by_remaining_time();
+        self.print_inactive_by_remaining_time();
+    }
+
+    pub fn print_active_by_remaining_time(&self) {
+        let mut active = self
+            .entries
+            .values()
+            .filter(|e| !self.suspended_entries.contains(&e.name))
+            .collect::<Vec<&Entry>>();
+        active.sort_by(|a, b| a.remaining_time.cmp(&b.remaining_time));
         for e in active {
+            // this is not nice, I should better make the case destinction here.
             e.print(self.t1, self.t2, self.t3)
+        }
+    }
+
+    pub fn print_inactive_by_remaining_time(&self) {
+        let mut inactive = self
+            .entries
+            .values()
+            .filter(|e| self.suspended_entries.contains(&e.name))
+            .collect::<Vec<&Entry>>();
+        inactive.sort_by(|a, b| a.remaining_time.cmp(&b.remaining_time));
+        for e in inactive {
+            e.print_suspended()
         }
     }
 }
@@ -269,6 +290,18 @@ impl Entry {
         } else {
             line = line.magenta().on_black().to_string();
         }
+        println!("{}", line);
+    }
+
+    fn print_suspended(&self) {
+        let mut line = format!(
+            "{0: <15}  {1: <15}  {2: <15}  {3: <15}",
+            self.name,
+            self.remaining_time,
+            self.last_contact.date(),
+            self.interval,
+        );
+        line = line.truecolor(211, 211, 211).on_black().to_string();
         println!("{}", line);
     }
 }
@@ -364,6 +397,6 @@ mod tests {
         table.add_entry(e2).unwrap();
         table.add_entry(e1).unwrap();
         table.add_entry(e3).unwrap();
-        table.print_by_remaining_time();
+        table.print_all_by_remaining_time();
     }
 }

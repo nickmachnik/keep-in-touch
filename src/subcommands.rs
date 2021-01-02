@@ -113,6 +113,7 @@ pub fn modify(args: ArgMatches) {
     info!("Modified {:?}.", name);
 }
 
+// A lot of duplicated code here, this should be wrapped.
 pub fn view(_args: ArgMatches) {
     let table_path = get_table_path();
     let data = Table::from_json(&table_path);
@@ -122,5 +123,66 @@ pub fn view(_args: ArgMatches) {
     }
     let mut data = data.unwrap();
     data.update_entries_par();
-    data.print_by_remaining_time();
+    data.print_header();
+    data.print_all_by_remaining_time();
+}
+
+pub fn view_active(_args: ArgMatches) {
+    let table_path = get_table_path();
+    let data = Table::from_json(&table_path);
+    if data.is_err() {
+        error!("List file not found. Please add entries before viewing.");
+        std::process::exit(exitcode::USAGE);
+    }
+    let mut data = data.unwrap();
+    data.update_entries_par();
+    data.print_header();
+    data.print_active_by_remaining_time();
+}
+
+pub fn view_inactive(_args: ArgMatches) {
+    let table_path = get_table_path();
+    let data = Table::from_json(&table_path);
+    if data.is_err() {
+        error!("List file not found. Please add entries before viewing.");
+        std::process::exit(exitcode::USAGE);
+    }
+    let mut data = data.unwrap();
+    data.update_entries_par();
+    data.print_header();
+    data.print_inactive_by_remaining_time();
+}
+
+pub fn resume(args: ArgMatches) {
+    let table_path = get_table_path();
+    let data = Table::from_json(&table_path);
+    if data.is_err() {
+        error!("List file not found. Please add entries first.");
+        std::process::exit(exitcode::USAGE);
+    }
+    let c = args.subcommand_matches("resume").unwrap();
+    let name = c.value_of("name").unwrap();
+    let mut data = data.unwrap();
+    if data.resume_entry(name.to_string()).is_err() {
+        std::process::exit(exitcode::USAGE);
+    }
+    data.to_json(&table_path);
+    info!("Resumed {:?}.", name);
+}
+
+pub fn suspend(args: ArgMatches) {
+    let table_path = get_table_path();
+    let data = Table::from_json(&table_path);
+    if data.is_err() {
+        error!("List file not found. Please add entries first.");
+        std::process::exit(exitcode::USAGE);
+    }
+    let c = args.subcommand_matches("suspend").unwrap();
+    let name = c.value_of("name").unwrap();
+    let mut data = data.unwrap();
+    if data.suspend_entry(name.to_string()).is_err() {
+        std::process::exit(exitcode::USAGE);
+    }
+    data.to_json(&table_path);
+    info!("Suspended {:?}.", name);
 }
