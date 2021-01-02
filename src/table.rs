@@ -3,14 +3,36 @@
 
 use chrono::{DateTime, Utc};
 use colored::Colorize;
-use hashbrown::HashMap;
 use rayon::prelude::*;
 use serde::{Deserialize, Serialize};
+use std::collections::{HashMap, HashSet};
 use std::error;
 use std::fmt;
 use std::fs::{read_to_string, File};
 use std::io::BufWriter;
 use std::path::Path;
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct UnsuspendedEntry {
+    name: String,
+}
+
+impl fmt::Display for UnsuspendedEntry {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "Name {} it not currently suspended.", self.name)
+    }
+}
+
+impl error::Error for UnsuspendedEntry {
+    fn description(&self) -> &str {
+        "Entry is not suspended."
+    }
+
+    fn cause(&self) -> Option<&(dyn error::Error)> {
+        // Generic error, underlying cause isn't tracked.
+        None
+    }
+}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ExistingEntry {
@@ -59,6 +81,7 @@ impl error::Error for MissingEntry {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Table {
     pub entries: HashMap<String, Entry>,
+    pub suspended_entries: HashSet<String>,
     // thresholds for highlighting
     t1: i64,
     t2: i64,
@@ -69,6 +92,7 @@ impl Table {
     pub fn new() -> Self {
         Table {
             entries: HashMap::new(),
+            suspended_entries: HashSet::new(),
             t1: 0,
             t2: 3,
             t3: 10,
@@ -99,6 +123,16 @@ impl Table {
     pub fn remove_entry(&mut self, name: String) -> Result<(), MissingEntry> {
         if self.entries.remove(&name).is_none() {
             Err(MissingEntry { name })
+        } else {
+            Ok(())
+        }
+    }
+
+    pub fn suspend_entry(&mut self, name: String) -> Result<(), MissingEntry> {
+        if !self.entries.contains_key(&name) {
+            Err(MissingEntry { name })
+        } else if !self.suspended_entries.contains(&name) {
+            Err()
         } else {
             Ok(())
         }
