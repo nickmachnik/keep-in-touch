@@ -17,7 +17,7 @@ cd
 mkdir ./.keep_in_touch
 cd .keep_in_touch
 wget https://github.com/nickmachnik/keep-in-touch/releases/download/v0.1.1/keep-in-touch-v0.1.1-x86_64-unknown-linux-gnu.tar.gz
-tar -xf keep-in-touch-v0.1.1-x86_64-unknown-linux-gnu.tar.gz
+tar -xf keep-in-touch-v0.2.2-x86_64-unknown-linux-musl.tar.gz
 ```
 
 Add that directory to your path. On Ubuntu you could add this line to your `.bashrc`:
@@ -31,6 +31,8 @@ If you would like to enable bash autocompletion for `kit`, source the autocomple
 ```
 source ${HOME}/.keep_in_touch/kit-completion.sh
 ```
+
+Unfortunately, autocompletion does not work properly in zsh at the moment.
 
 ## Usage
 
