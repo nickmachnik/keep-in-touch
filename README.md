@@ -23,13 +23,13 @@ tar -xf keep-in-touch-v0.1.1-x86_64-unknown-linux-gnu.tar.gz
 Add that directory to your path. On Ubuntu you could add this line to your `.bashrc`:
 
 ```
-export PATH="~/.keep_in_touch:$PATH"
+export PATH="${HOME}/.keep_in_touch:$PATH"
 ```
 
 If you would like to enable bash autocompletion for `kit`, source the autocompletion script on shell start by adding this to your `.bashrc`:
 
 ```
-source ~/.keep_in_touch/kit-completion.sh
+source ${HOME}/.keep_in_touch/kit-completion.sh
 ```
 
 ## Usage
